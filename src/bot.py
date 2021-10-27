@@ -8,6 +8,7 @@ Basic example for a bot that uses inline keyboards.
 import logging
 import os
 from pathlib import Path
+from functools import wraps
 
 from firefly import Firefly
 from telegram import (InlineKeyboardButton, InlineKeyboardMarkup,
@@ -26,12 +27,24 @@ USERFILE = 'user_id.txt'
 FIRST_USER = None
 
 
+def restricted(func):
+    @wraps(func)
+    def wrapped(update, context, *args, **kwargs):
+        user_id = update.message.from_user.id
+        if not check_user(update):
+            print("Unauthorized access denied for {}.".format(user_id))
+            return
+        return func(update, context, *args, **kwargs)
+    return wrapped
+
+@restricted
 def start(update, context):
-    if check_user(update):
-        update.message.reply_text(f"You are user {update.message.from_user.id} and authorised.\nPlease enter your Firefly III URL")
+    user_id = update.message.from_user.id
+    update.message.reply_text(f"You are user {user_id} and authorised.\nPlease enter your Firefly III URL")
     return FIREFLY_URL
+    
 
-
+@restricted
 def get_firefly_token(update, context):
     firefly_url = update.message.text.rstrip("//") # Remove trailing slash if exists
     context.user_data["firefly_url"] = firefly_url 
@@ -40,7 +53,7 @@ def get_firefly_token(update, context):
     \nYou can generate it from the OAuth section here - {}/profile""".format(firefly_url))
     return DEFAULT_WITHDRAW_ACCOUNT
 
-
+@restricted
 def get_default_account(update, context):
     token = update.message.text
     firefly = Firefly(hostname=context.user_data.get(
@@ -60,7 +73,7 @@ def get_default_account(update, context):
         "Please choose the default Source account:", reply_markup=reply_markup)
     return DEFAULT_WITHDRAW_ACCOUNT
 
-
+@restricted
 def store_default_account(update, context):
     query = update.callback_query
     default_account_id = query.data
@@ -68,7 +81,7 @@ def store_default_account(update, context):
     query.edit_message_text("Setup Complete. Happy Spending!(?)")
     return ConversationHandler.END
 
-
+@restricted
 def spend(update, context):
 
     def safe_list_get(l, idx):
@@ -149,7 +162,7 @@ You can skip specfic fields by leaving them empty (except the first two) -
         `5, Starbucks, , Food Budget, UCO Bank`
 """)
 
-
+@restricted
 def cancel(update, context):
     update.message.reply_text("Cancelled")
     return ConversationHandler.END
