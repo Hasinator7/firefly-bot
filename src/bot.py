@@ -165,7 +165,7 @@ def check_user(update):
     if FIRST_USER==None:
         FIRST_USER = userid
         with open(os.path.join(os.getenv("CONFIG_PATH", ""), USERFILE),'w') as outfile:
-            outfile.write(userid)
+            outfile.write(str(userid))
         return True
     elif FIRST_USER==userid:
         return True
