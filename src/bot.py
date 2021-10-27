@@ -131,7 +131,7 @@ def spend(update, context):
     else:
         update.message.reply_text("Something went wrong, check logs")
 
-
+@restricted
 def about(update, context):
     firefly = get_firefly(context)
     about = firefly.get_about_user()
@@ -141,7 +141,7 @@ def about(update, context):
 def get_firefly(context):
     return Firefly(hostname=context.user_data.get("firefly_url"), auth_token=context.user_data.get("firefly_token"))
 
-
+@restricted
 def help(update, context):
     if not context.user_data.get("firefly_default_account"):
         update.message.reply_text("Type /start to initiate the setup process.")
