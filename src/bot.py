@@ -24,7 +24,7 @@ logger = logging.getLogger(__name__)
 FIREFLY_URL, FIREFLY_TOKEN, DEFAULT_WITHDRAW_ACCOUNT, NOT_AUTHORISED = range(4)
 
 USERFILE = 'user_id.txt'
-FIRST_USER = 1 # Normally None, this is for testing the situation of an unauthorized user attempting to communicate with the bot
+FIRST_USER = None
 
 
 def restricted(func):
