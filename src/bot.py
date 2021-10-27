@@ -161,7 +161,7 @@ def error(update, context):
 
 def check_user(update):
     userid = update.message.from_user.id
-    print(userid)
+    logger.warning(userid)
 
 
 def main():
