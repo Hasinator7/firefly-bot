@@ -27,6 +27,7 @@ FIRST_USER = None
 
 
 def start(update, context):
+    check_user(update)
     update.message.reply_text("Please enter your Firefly III URL")
     return FIREFLY_URL
 
