@@ -20,15 +20,15 @@ logging.basicConfig(format="%(asctime)s - %(name)s - %(levelname)s - %(message)s
                     level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-FIREFLY_URL, FIREFLY_TOKEN, DEFAULT_WITHDRAW_ACCOUNT = range(3)
+FIREFLY_URL, FIREFLY_TOKEN, DEFAULT_WITHDRAW_ACCOUNT, NOT_AUTHORISED = range(4)
 
 USERFILE = 'user_id.txt'
 FIRST_USER = None
 
 
 def start(update, context):
-    check_user(update)
-    update.message.reply_text("Please enter your Firefly III URL")
+    if check_user(update):
+        update.message.reply_text(f"You are user {update.message.from_user.id} and authorised.\nPlease enter your Firefly III URL")
     return FIREFLY_URL
 
 
@@ -160,8 +160,17 @@ def error(update, context):
     logger.warning("Update '%s' caused error '%s'", update, context.error)
 
 def check_user(update):
+    global FIRST_USER
     userid = update.message.from_user.id
-    logger.warning(userid)
+    if FIRST_USER==None:
+        FIRST_USER = userid
+        with open(os.path.join(os.getenv("CONFIG_PATH", ""), USERFILE),'w') as outfile:
+            outfile.write(userid)
+        return True
+    elif FIRST_USER==userid:
+        return True
+    return False
+
 
 
 def main():
