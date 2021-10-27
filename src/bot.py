@@ -22,6 +22,9 @@ logger = logging.getLogger(__name__)
 
 FIREFLY_URL, FIREFLY_TOKEN, DEFAULT_WITHDRAW_ACCOUNT = range(3)
 
+USERFILE = 'user_id.txt'
+FIRST_USER = None
+
 
 def start(update, context):
     update.message.reply_text("Please enter your Firefly III URL")
@@ -155,14 +158,25 @@ def error(update, context):
     """Log Errors caused by Updates."""
     logger.warning("Update '%s' caused error '%s'", update, context.error)
 
+def check_user(update):
+    userid = update.message.from_user.id
+    print(userid)
+
 
 def main():
+    global FIRST_USER
     data_dir = os.getenv("CONFIG_PATH", "")
     if not data_dir:
         data_dir = Path.joinpath(Path.home(), ".config", "firefly-bot")
         data_dir.mkdir(parents=True, exist_ok=True)
     else:
         data_dir = Path(data_dir)
+    path_to_userfile = os.path.join(data_dir, USERFILE)
+    if os.path.exists(path_to_userfile, 'r'):
+        with open(path_to_userfile, 'r') as infile:
+            userid = infile.read()
+        if userid != '':
+            FIRST_USER = userid
     bot_persistence = PicklePersistence(filename=str(data_dir/"bot-data"))
     bot_token = os.getenv("TELEGRAM_BOT_TOKEN")
     updater = Updater(bot_token,
