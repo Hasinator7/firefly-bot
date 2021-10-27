@@ -158,7 +158,7 @@ A simple one -
 One with all the fields being used -
         `5, Mocha with an extra shot for Steve, Coffee, Food Budget, UCO Bank, Starbucks`
 
-You can skip specfic fields by leaving them empty (except the first two) - 
+You can skip specific fields by leaving them empty (except the first two) - 
         `5, Starbucks, , Food Budget, UCO Bank`
 """)
 
