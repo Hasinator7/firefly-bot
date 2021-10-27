@@ -163,7 +163,9 @@ You can skip specific fields by leaving them empty (except the first two) -
 """)
 
 def get_user_id(update):
-    return update.message.chat.id
+    if update.message is not None:
+        return update.message.chat.id
+    return FIRST_USER # If no message, assume the right user got far enough
 
 @restricted
 def cancel(update, context):
