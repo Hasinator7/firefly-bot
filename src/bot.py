@@ -30,7 +30,7 @@ FIRST_USER = None
 def restricted(func):
     @wraps(func)
     def wrapped(update, context, *args, **kwargs):
-        user_id = update.message.from_user.id
+        user_id = get_user_id(update)
         if not check_user(update):
             update.message.reply_text("Unauthorized access denied for {}.\n Only {} is authorized".format(user_id, FIRST_USER))
             return
@@ -162,6 +162,9 @@ You can skip specific fields by leaving them empty (except the first two) -
         `5, Starbucks, , Food Budget, UCO Bank`
 """)
 
+def get_user_id(update):
+    return update.message.chat.id
+
 @restricted
 def cancel(update, context):
     update.message.reply_text("Cancelled")
@@ -174,7 +177,7 @@ def error(update, context):
 
 def check_user(update):
     global FIRST_USER
-    userid = update.message.from_user.id
+    userid = get_user_id(update)
     if FIRST_USER==None:
         FIRST_USER = userid
         with open(os.path.join(os.getenv("CONFIG_PATH", ""), USERFILE),'w') as outfile:
