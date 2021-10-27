@@ -199,7 +199,7 @@ def main():
         with open(path_to_userfile, 'r') as infile:
             userid = infile.read()
         if userid != '':
-            FIRST_USER = userid
+            FIRST_USER = int(userid)
     bot_persistence = PicklePersistence(filename=str(data_dir/"bot-data"))
     bot_token = os.getenv("TELEGRAM_BOT_TOKEN")
     updater = Updater(bot_token,
