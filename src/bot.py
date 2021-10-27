@@ -172,7 +172,7 @@ def main():
     else:
         data_dir = Path(data_dir)
     path_to_userfile = os.path.join(data_dir, USERFILE)
-    if os.path.exists(path_to_userfile, 'r'):
+    if os.path.exists(path_to_userfile):
         with open(path_to_userfile, 'r') as infile:
             userid = infile.read()
         if userid != '':
