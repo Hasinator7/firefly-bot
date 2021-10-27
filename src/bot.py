@@ -32,7 +32,7 @@ def restricted(func):
     def wrapped(update, context, *args, **kwargs):
         user_id = update.message.from_user.id
         if not check_user(update):
-            print("Unauthorized access denied for {}.".format(user_id))
+            update.message.reply_text("Unauthorized access denied for {}.".format(user_id))
             return
         return func(update, context, *args, **kwargs)
     return wrapped
