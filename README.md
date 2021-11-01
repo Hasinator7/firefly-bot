@@ -1,29 +1,17 @@
 # Firefly Bot
 
-A Telegram bot to create transactions in Firefly III
+A Telegram bot to create transactions in Firefly III. This fork works exactly like the original, except that the first user to message the bot becomes the only authorized user. The bot will ignore the inputs of unauthorized users except that it tells those user that they are not authorized.
 ## Setup
 
 First you'll have to generate a Telegram Bot token through [BotFather](https://t.me/botfather). Once you generate the token, keep it safe.
 
-### Docker (Recommended)
+### Docker
 
 ```bash
-docker create \
-  --name=firefly-bot \ 
-  -e TELEGRAM_BOT_TOKEN=<your-bot-token> \
-  -v </path/to/config>:/config \
-  vjfalk1/firefly-telegram-bot
+git pull https://github.com/Hasinator7/firefly-bot
+docker build -t fireflybot .
+docker start -e TELEGRAM_BOT_TOKEN=<your-bot-token> fireflybot
 ```
-
-### Manual
-You'll need python 3.8 and pip installed
-
-- Clone the repository
-- Install dependencies by running `pip install -r requirements.txt`
-- Run `export TELEGRAM_BOT_TOKEN=<your-bot-token>`
-- Run `python3 ./src/bot.py`
-
----
 
 ## Usage
 
